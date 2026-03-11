@@ -15,6 +15,7 @@ import { handleGetProgram } from './handlers/handleGetProgram';
 import { handleGetClass } from './handlers/handleGetClass';
 import { handleGetFunctionGroup } from './handlers/handleGetFunctionGroup';
 import { handleGetFunction } from './handlers/handleGetFunction';
+import { handleGetFunctionSignature } from './handlers/handleGetFunctionSignature';
 import { handleGetTable } from './handlers/handleGetTable';
 import { handleGetStructure } from './handlers/handleGetStructure';
 import { handleGetTableContents } from './handlers/handleGetTableContents';
@@ -155,10 +156,28 @@ export class mcp_abap_adt_server {
                 },
                 function_group: {
                   type: 'string',
-                  description: 'Name of the function group'
+                  description: 'Name of the function group (optional, auto-resolved when omitted)'
                 }
               },
-              required: ['function_name', 'function_group']
+              required: ['function_name']
+            }
+          },
+          {
+            name: 'GetFunctionSignature',
+            description: 'Retrieve ABAP Function Module signature/parameters only',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                function_name: {
+                  type: 'string',
+                  description: 'Name of the function module'
+                },
+                function_group: {
+                  type: 'string',
+                  description: 'Name of the function group (optional, auto-resolved when omitted)'
+                }
+              },
+              required: ['function_name']
             }
           },
           {
@@ -310,6 +329,8 @@ export class mcp_abap_adt_server {
           return await handleGetClass(request.params.arguments);
         case 'GetFunction':
           return await handleGetFunction(request.params.arguments);
+        case 'GetFunctionSignature':
+          return await handleGetFunctionSignature(request.params.arguments);
         case 'GetFunctionGroup':
           return await handleGetFunctionGroup(request.params.arguments);
         case 'GetStructure':
